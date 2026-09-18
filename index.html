@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LDCHEKER Panel</title>
+<style>
+  :root{
+    --bg:#000;
+    --blue:#00a9ff;
+    --blue2:#0079c8;
+    --cyan:#00eaff;
+    --red:#ff2b35;
+    --white:#f7fbff;
+    --green:#d9ff00;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%;background:#000;color:#fff}
+  body{
+    font-family: Georgia, "Times New Roman", serif;
+    overflow-x:auto;
+  }
+  .page{
+    width:1116px;
+    min-height:1410px;
+    margin:0 auto;
+    padding:18px 14px 28px;
+    position:relative;
+    background:#000 url("assets/background.jpg") center top / cover no-repeat;
+}
+  .row{display:flex;align-items:center;gap:30px}
+  .top{
+    display:grid;
+    grid-template-columns:306px 470px;
+    gap:30px;
+    margin-bottom:78px;
+  }
+  .stack{display:flex;flex-direction:column;gap:13px}
+  .btn{
+    height:50px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:2px solid var(--blue);
+    border-radius:8px;
+    color:#fff;
+    background:linear-gradient(#06243c,#061523);
+    box-shadow:
+      0 0 0 1px #00558e inset,
+      0 0 5px #00bfff,
+      0 0 12px rgba(0,170,255,.45) inset;
+    text-shadow:0 2px 2px #000;
+    font-size:26px;
+    font-weight:900;
+    letter-spacing:.5px;
+    cursor:pointer;
+    user-select:none;
+    transition:.12s ease;
+  }
+  .btn:hover{filter:brightness(1.25);transform:translateY(-1px)}
+  .btn:active{transform:translateY(1px);filter:brightness(.9)}
+  .wide{font-size:25px}
+  .country-title{
+    position:absolute;
+    right:18px;
+    top:111px;
+    font-family:Arial Black,Impact,sans-serif;
+    font-size:32px;
+    letter-spacing:1px;
+    color:#f8fbff;
+    -webkit-text-stroke:2px #1579b8;
+    text-shadow:0 0 5px #00d9ff,0 3px 0 #0b3452;
+    background:#071b2d;
+    border-radius:25px;
+    padding:0 11px 3px;
+    z-index:3;
+  }
+
+  .middle{
+    display:grid;
+    grid-template-columns:590px 440px;
+    gap:42px;
+  }
+
+  .left-panel{
+    display:grid;
+    grid-template-columns:92px 92px;
+    gap:9px 16px;
+    align-content:start;
+    padding-top:48px;
+  }
+  .code{
+    height:51px;
+    font:900 31px Arial,sans-serif;
+    letter-spacing:1px;
+  }
+  .code.blue{
+    color:#00e8ff;
+    background:linear-gradient(#063249,#021622);
+    border-color:#008fc5;
+  }
+  .code.red{
+    color:#ffeef0;
+    background:linear-gradient(#8c1b25,#351116);
+    border-color:#ff3946;
+    text-shadow:0 2px 2px #000;
+  }
+
+  .countries{
+    display:grid;
+    grid-template-columns:repeat(5, 76px);
+    grid-auto-rows:72px;
+    gap:7px 12px;
+    padding-top:0;
+    align-content:start;
+  }
+  .country{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+    cursor:pointer;
+    padding:0;
+    border:0;
+    background:transparent;
+    color:#fff;
+    font-family:inherit;
+  }
+  .flag{
+    width:76px;
+    height:58px;
+    border-radius:7px;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:40px;
+    line-height:1;
+    background:#0a0a0a;
+    border:2px solid #00a6ff;
+    box-shadow:0 0 5px #00d5ff, 0 0 10px rgba(0,130,255,.7);
+    text-shadow:none;
+  }
+  .country:nth-child(3n) .flag{border-color:#ff232d;box-shadow:0 0 5px #ff2028,0 0 9px rgba(255,0,0,.55)}
+  .country:nth-child(4n) .flag{border-color:#00d9ff}
+
+  .flag img{
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:cover;
+  }
+  .flag-fallback{display:none}
+  .country:hover .flag{
+    transform:scale(1.04);
+    filter:brightness(1.18);
+  }
+  .country:active .flag{
+    transform:scale(.97);
+  }
+  .cc{
+    margin-top:-1px;
+    font:900 18px Arial,sans-serif;
+    color:#f4f8ff;
+    text-shadow:0 2px 2px #000,0 0 3px #00a9ff;
+  }
+
+  .lower-left{
+    position:absolute;
+    left:14px;
+    top:813px;
+    width:576px;
+    display:grid;
+    grid-template-columns:260px 290px;
+    gap:10px 24px;
+  }
+  .lower-left .btn{height:48px;font-size:24px}
+  .lower-left .full{grid-column:1/-1}
+  .smallwide{font-size:21px!important}
+
+  .actions{
+    position:absolute;
+    left:14px;
+    top:1090px;
+    width:575px;
+  }
+.action-row{display:grid;grid-template-columns:260px 290px;gap:25px;margin-bottom:9px}  .action-row .btn{height:48px;font-size:24px}
+  .action-row.single{grid-template-columns:174px 1fr}
+  .email{color:#ff1717;font-family:Arial Black,Arial,sans-serif;font-size:23px!important}
+  .reset{
+    width:545px;
+    margin-top:12px;
+    color:#dfff00;
+    font-family:Arial Black,Arial,sans-serif;
+    font-size:22px!important;
+  }
+
+  .news{
+    position:absolute;
+    right:14px;
+    top:1050px;
+    width:472px;
+  }
+  .news-title{
+    width:330px;
+    margin:0 auto 10px;
+    height:53px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(#0b304b,#101113);
+    border:2px solid #00aaff;
+    box-shadow:0 0 7px #00bfff inset,0 0 6px #007ec8;
+    clip-path:polygon(7% 0,93% 0,100% 48%,93% 100%,7% 100%,0 48%);
+    font-size:25px;
+    font-style:italic;
+    font-weight:900;
+    text-shadow:0 2px 2px #000;
+  }
+  .device-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+  }
+  .device-grid .btn{height:48px;font-size:24px}
+
+  .country-info{
+    position:absolute;
+    right:14px;
+    bottom:58px;
+    width:440px;
+    height:55px;
+    border:2px solid #00a9ff;
+    border-radius:6px;
+    background:#fff;
+    box-shadow:0 0 7px #00cfff;
+    opacity:.95;
+  }
+
+  /* simple inline flag look; emoji remain readable on Windows/Chrome */
+  .flag span{filter:drop-shadow(0 1px 1px #000)}
+  .hint{
+    position:fixed;left:50%;bottom:14px;transform:translateX(-50%);
+    padding:7px 14px;border-radius:7px;
+    background:#071827;border:1px solid #008fd0;
+    box-shadow:0 0 8px #008fd0;color:#bfeeff;
+    font:13px Arial,sans-serif;opacity:0;pointer-events:none;
+    transition:.2s;z-index:10
+  }
+  .hint.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="top">
+    <div class="stack">
+      <button class="btn">ALL IMF-NORMAL</button>
+      <button class="btn">ALL IMF-FAST</button>
+    </div>
+    <div class="stack">
+      <button class="btn wide">ALL IMF-NORMAL NONSTOP</button>
+      <button class="btn wide">ALL IMF-FAST NONSTOP</button>
+    </div>
+  </div>
+
+  <div class="country-title">COUNTRY</div>
+
+  <div class="middle">
+    <div class="left-panel">
+      <button class="btn code blue">JP 1</button><button class="btn code red">JSD</button>
+      <button class="btn code blue">A1</button><button class="btn code red">A1</button>
+      <button class="btn code blue">A2</button><button class="btn code red">A2</button>
+      <button class="btn code blue">I1</button><button class="btn code red">I1</button>
+      <button class="btn code blue">I2</button><button class="btn code red">I2</button>
+      <button class="btn code blue">I3</button><button class="btn code red">I3</button>
+      <button class="btn code blue">IP</button><button class="btn code red">IP</button>
+      <button class="btn code blue">D1</button><button class="btn code red">D1</button>
+      <button class="btn code blue">D2</button><button class="btn code red">D2</button>
+    </div>
+
+    <div class="countries" id="countries">
+      <button class="country" type="button" data-country="DE" data-flag-code="DE"><div class="flag"><img src="assets/flag/de.png" alt="DE" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">de</div></button>
+      <button class="country" type="button" data-country="AT" data-flag-code="AT"><div class="flag"><img src="assets/flag/at.png" alt="AT" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">at</div></button>
+      <button class="country" type="button" data-country="CH" data-flag-code="CH"><div class="flag"><img src="assets/flag/ch.png" alt="CH" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">ch</div></button>
+      <button class="country" type="button" data-country="NO" data-flag-code="NO"><div class="flag"><img src="assets/flag/no.png" alt="NO" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">no</div></button>
+      <button class="country" type="button" data-country="SE" data-flag-code="SE"><div class="flag"><img src="assets/flag/se.png" alt="SE" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">se</div></button>
+
+      <button class="country" type="button" data-country="DK" data-flag-code="DK"><div class="flag"><img src="assets/flag/dk.png" alt="DK" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">dk</div></button>
+      <button class="country" type="button" data-country="BE" data-flag-code="BE"><div class="flag"><img src="assets/flag/be.png" alt="BE" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">be</div></button>
+      <button class="country" type="button" data-country="NL" data-flag-code="NL"><div class="flag"><img src="assets/flag/nl.png" alt="NL" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">nl</div></button>
+      <button class="country" type="button" data-country="FI" data-flag-code="FI"><div class="flag"><img src="assets/flag/fi.png" alt="FI" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">fi</div></button>
+      <button class="country" type="button" data-country="FR" data-flag-code="FR"><div class="flag"><img src="assets/flag/fr.png" alt="FR" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">fr</div></button>
+
+      <button class="country" type="button" data-country="ES" data-flag-code="ES"><div class="flag"><img src="assets/flag/es.png" alt="ES" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">es</div></button>
+      <button class="country" type="button" data-country="PT" data-flag-code="PT"><div class="flag"><img src="assets/flag/pt.png" alt="PT" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">pt</div></button>
+      <button class="country" type="button" data-country="US" data-flag-code="US"><div class="flag"><img src="assets/flag/us.png" alt="US" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">us</div></button>
+      <button class="country" type="button" data-country="UK" data-flag-code="UK"><div class="flag"><img src="assets/flag/uk.png" alt="UK" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">uk</div></button>
+      <button class="country" type="button" data-country="CA" data-flag-code="CA"><div class="flag"><img src="assets/flag/ca.png" alt="CA" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">ca</div></button>
+
+      <button class="country" type="button" data-country="AU" data-flag-code="AU"><div class="flag"><img src="assets/flag/au.png" alt="AU" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">au</div></button>
+      <button class="country" type="button" data-country="IT" data-flag-code="IT"><div class="flag"><img src="assets/flag/it.png" alt="IT" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">it</div></button>
+      <button class="country" type="button" data-country="JP" data-flag-code="JP"><div class="flag"><img src="assets/flag/jp.png" alt="JP" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">jp</div></button>
+      <button class="country" type="button" data-country="IE" data-flag-code="IE"><div class="flag"><img src="assets/flag/ie.png" alt="IE" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">ie</div></button>
+      <button class="country" type="button" data-country="IE" data-flag-code="IE"><div class="flag"><img src="assets/flag/ie.png" alt="IE" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">ie</div></button>
+
+      <button class="country" type="button" data-country="CZ" data-flag-code="CZ"><div class="flag"><img src="assets/flag/cz.png" alt="CZ" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">cz</div></button>
+      <button class="country" type="button" data-country="RO" data-flag-code="RO"><div class="flag"><img src="assets/flag/ro.png" alt="RO" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">ro</div></button>
+      <button class="country" type="button" data-country="HU" data-flag-code="HU"><div class="flag"><img src="assets/flag/hu.png" alt="HU" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">hu</div></button>
+      <button class="country" type="button" data-country="PU" data-flag-code="PU"><div class="flag"><img src="assets/flag/pl.png" alt="PU" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">pu</div></button>
+      <button class="country" type="button" data-country="PL" data-flag-code="PL"><div class="flag"><img src="assets/flag/pl.png" alt="PL" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">pl</div></button>
+
+      <button class="country" type="button" data-country="SK" data-flag-code="SK"><div class="flag"><img src="assets/flag/sk.png" alt="SK" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">sk</div></button>
+      <button class="country" type="button" data-country="ZA" data-flag-code="ZA"><div class="flag"><img src="assets/flag/za.png" alt="ZA" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">za</div></button>
+      <button class="country" type="button" data-country="KR" data-flag-code="KR"><div class="flag"><img src="assets/flag/kr.png" alt="KR" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">kr</div></button>
+      <button class="country" type="button" data-country="IS" data-flag-code="IS"><div class="flag"><img src="assets/flag/is.png" alt="IS" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">is</div></button>
+      <button class="country" type="button" data-country="LU" data-flag-code="LU"><div class="flag"><img src="assets/flag/lu.png" alt="LU" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">lu</div></button>
+
+      <button class="country" type="button" data-country="UA" data-flag-code="UA"><div class="flag"><img src="assets/flag/ua.png" alt="UA" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">ua</div></button>
+      <button class="country" type="button" data-country="CL" data-flag-code="CL"><div class="flag"><img src="assets/flag/cl.png" alt="CL" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">cl</div></button>
+      <button class="country" type="button" data-country="TW" data-flag-code="TW"><div class="flag"><img src="assets/flag/tw.png" alt="TW" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">tw</div></button>
+      <button class="country" type="button" data-country="SG" data-flag-code="SG"><div class="flag"><img src="assets/flag/sg.png" alt="SG" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">sg</div></button>
+      <button class="country" type="button" data-country="ET" data-flag-code="ET"><div class="flag"><img src="assets/flag/et.png" alt="ET" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">et</div></button>
+
+      <button class="country" type="button" data-country="TR" data-flag-code="TR"><div class="flag"><img src="assets/flag/tr.png" alt="TR" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">tr</div></button>
+      <button class="country" type="button" data-country="MX" data-flag-code="MX"><div class="flag"><img src="assets/flag/mx.png" alt="MX" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">mx</div></button>
+      <button class="country" type="button" data-country="IN" data-flag-code="IN"><div class="flag"><img src="assets/flag/in.png" alt="IN" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">in</div></button>
+      <button class="country" type="button" data-country="BR" data-flag-code="BR"><div class="flag"><img src="assets/flag/br.png" alt="BR" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">br</div></button>
+      <button class="country" type="button" data-country="LV" data-flag-code="LV"><div class="flag"><img src="assets/flag/lv.png" alt="LV" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">lv</div></button>
+
+      <button class="country" type="button" data-country="AR" data-flag-code="AR"><div class="flag"><img src="assets/flag/ar.png" alt="AR" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">ar</div></button>
+      <button class="country" type="button" data-country="MY" data-flag-code="MY"><div class="flag"><img src="assets/flag/my.png" alt="MY" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">my</div></button>
+      <button class="country" type="button" data-country="PE" data-flag-code="PE"><div class="flag"><img src="assets/flag/pe.png" alt="PE" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">pe</div></button>
+      <button class="country" type="button" data-country="KZ" data-flag-code="KZ"><div class="flag"><img src="assets/flag/kz.png" alt="KZ" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">kz</div></button>
+      <button class="country" type="button" data-country="GR" data-flag-code="GR"><div class="flag"><img src="assets/flag/gr.png" alt="GR" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">gr</div></button>
+
+      <button class="country" type="button" data-country="VA" data-flag-code="VA"><div class="flag"><img src="assets/flag/va.png" alt="VA" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">va</div></button>
+      <button class="country" type="button" data-country="RO" data-flag-code="RO"><div class="flag"><img src="assets/flag/ro.png" alt="RO" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">ro</div></button>
+      <button class="country" type="button" data-country="MA" data-flag-code="MA"><div class="flag"><img src="assets/flag/ma.png" alt="MA" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">ma</div></button>
+      <button class="country" type="button" data-country="TH" data-flag-code="TH"><div class="flag"><img src="assets/flag/th.png" alt="TH" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">th</div></button>
+      <button class="country" type="button" data-country="MC" data-flag-code="MC"><div class="flag"><img src="assets/flag/mc.png" alt="MC" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="flag-fallback">🏳️</span></div><div class="cc">mc</div></button>
+    </div>
+  </div>
+
+  <div class="lower-left">
+    <button class="btn">NORMAL</button>
+    <button class="btn">WORLD FARM</button>
+    <button class="btn">WIFI</button>
+    <button class="btn">EXPRESS VPN</button>
+    <button class="btn">DISVUSOCK</button>
+    <button class="btn">OZZ PROXY</button>
+    <button class="btn">PIA PROXY</button>
+    <button class="btn">PROXYWARE</button>
+    <button class="btn full smallwide">CEK IP TUNNEL</button>
+  </div>
+
+  <div class="actions">
+    <div class="action-row">
+      <button class="btn">ON A-D</button>
+      <button class="btn">ON A-D</button>
+    </div>
+    <div class="action-row single">
+      <a class="btn email" href="https://temp-mail.org/id/" target="_blank" rel="noopener noreferrer">create mail</a>
+    </div>
+    <button class="btn reset">RESET CONNECTION ALL SYSTEM</button>
+  </div>
+
+  <div class="news">
+    <div class="news-title">NEWS ALL DEVICE</div>
+    <div class="device-grid">
+      <button class="btn">ANDROID</button><button class="btn">BAHCE</button>
+      <button class="btn">IPHONE</button><button class="btn">IPAD</button>
+      <button class="btn" style="grid-column:1/-1;width:235px;margin:auto">DESKTOP</button>
+    </div>
+  </div>
+
+  <div class="country-info"></div>
+  <div class="hint" id="hint"></div>
+</div>
+
+<script>
+  // Load country flags from assets/flag first, then assets/bendera.
+  document.querySelectorAll('.country .flag img').forEach(img=>{
+    img.addEventListener('error', function(){
+      const code=this.closest('.country')?.dataset.flagCode || this.closest('.country')?.dataset.country || '';
+      const tries=[
+        'assets/flag/'+code.toLowerCase()+'.jpg',
+        'assets/flag/'+code.toLowerCase()+'.jpeg',
+        'assets/flag/'+code.toLowerCase()+'.webp',
+        'assets/bendera/'+code.toLowerCase()+'.png',
+        'assets/bendera/'+code.toLowerCase()+'.jpg',
+        'assets/bendera/'+code.toLowerCase()+'.jpeg',
+        'assets/bendera/'+code.toLowerCase()+'.webp'
+      ];
+      const i=Number(this.dataset.tryIndex || 0);
+      if(i < tries.length){
+        this.dataset.tryIndex=String(i+1);
+        this.src=tries[i];
+      }else{
+        this.style.display='none';
+        const fb=this.nextElementSibling;
+        if(fb) fb.style.display='block';
+      }
+    });
+  });
+
+  // Demo interactions: every button shows its label.
+  document.querySelectorAll('button').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const hint=document.getElementById('hint');
+      hint.textContent='Dipilih: '+btn.textContent.trim();
+      hint.classList.add('show');
+      clearTimeout(window.__hintTimer);
+      window.__hintTimer=setTimeout(()=>hint.classList.remove('show'),1100);
+    });
+  });
+
+  document.querySelectorAll('.country').forEach(item=>{
+    item.addEventListener('click',(e)=>{
+      e.stopPropagation();
+      const code=item.dataset.country || item.querySelector('.cc').textContent;
+      const hint=document.getElementById('hint');
+      hint.textContent='Country: '+code;
+      hint.classList.add('show');
+      clearTimeout(window.__hintTimer);
+      window.__hintTimer=setTimeout(()=>hint.classList.remove('show'),1100);
+    });
+  });
+</script>
+</body>
+</html>
